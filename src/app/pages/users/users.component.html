@@ -1,0 +1,43 @@
+<app-page-header
+  title="Users"
+  subtitle="system_admin can see every account here and change anyone's role"
+></app-page-header>
+
+<div class="page-body">
+  <div class="card table">
+    <div class="table-row table-head" style="grid-template-columns: minmax(0,1.4fr) minmax(0,1.6fr) 90px 200px;">
+      <span>Username</span><span>Email</span><span>Active</span><span>Role</span>
+    </div>
+
+    @for (row of rows(); track row.id) {
+      <div class="table-row body" style="grid-template-columns: minmax(0,1.4fr) minmax(0,1.6fr) 90px 200px;">
+        <span class="mono ellipsis">{{ row.username }}</span>
+        <span class="muted ellipsis">{{ row.email ?? '—' }}</span>
+        <span>
+          <span class="badge" [class.badge-pos]="row.is_active" [class.badge-neg]="!row.is_active">
+            {{ row.is_active ? 'active' : 'disabled' }}
+          </span>
+        </span>
+        <span>
+          <select
+            class="select"
+            [ngModel]="row.roles[0]"
+            [disabled]="row.roleChanging"
+            (ngModelChange)="onRoleChange(row.id, $event)"
+          >
+            @for (role of assignableRoles; track role) {
+              <option [value]="role">{{ role }}</option>
+            }
+          </select>
+        </span>
+      </div>
+    }
+
+    @if (!loading() && !rows().length) {
+      <div class="empty-state">
+        <span class="empty-state__title">No users yet</span>
+        <span class="muted">Accounts are created in Keycloak.</span>
+      </div>
+    }
+  </div>
+</div>

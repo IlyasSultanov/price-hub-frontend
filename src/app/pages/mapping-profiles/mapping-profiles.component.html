@@ -1,0 +1,146 @@
+<app-page-header
+  title="Mapping profiles"
+  subtitle="Tell price-hub which column in a supplier's CSV holds each field, before uploading a feed"
+>
+</app-page-header>
+
+<div class="page-body">
+  <div class="card form">
+    <div class="field">
+      <span class="label">Supplier</span>
+      @if (canPickAnySupplier) {
+        <select class="select" [(ngModel)]="selectedSupplierId" name="supplier">
+          <option value="" disabled>Choose a supplier…</option>
+          @for (supplier of suppliers(); track supplier.id) {
+            <option [value]="supplier.id">{{ supplier.name }}</option>
+          }
+        </select>
+      } @else {
+        <input class="input mono" type="text" [value]="ownSupplierId ?? 'no supplier_id on your account'" disabled />
+      }
+    </div>
+
+    <div class="section">
+      <span class="label">Columns (CSV header name for each field you want to capture)</span>
+      <div class="column-grid">
+        @for (field of mappableFields; track field) {
+          <div class="field">
+            <span class="field-label">
+              {{ field }}
+              @if (requiredFields.includes(field)) {
+                <span class="required" title="Required">*</span>
+              }
+            </span>
+            <input class="input" type="text" [(ngModel)]="columnMap[field]" [name]="'col-' + field" placeholder="e.g. Price" />
+            <input
+              class="input transform-input"
+              type="text"
+              [(ngModel)]="transformsText[field]"
+              [name]="'tr-' + field"
+              placeholder="transforms, comma separated"
+            />
+          </div>
+        }
+      </div>
+      <span class="muted hint">Available transforms: {{ availableTransforms.join(', ') }}</span>
+    </div>
+
+    <div class="section">
+      <span class="label">Reader options</span>
+      <div class="reader-grid">
+        <div class="field">
+          <span class="field-label">Encoding</span>
+          <input class="input" type="text" [(ngModel)]="readerOpts.encoding" name="encoding" />
+        </div>
+        <div class="field">
+          <span class="field-label">Delimiter</span>
+          <input class="input" type="text" maxlength="1" [(ngModel)]="readerOpts.delimiter" name="delimiter" />
+        </div>
+        <div class="field">
+          <span class="field-label">Quote char</span>
+          <input class="input" type="text" maxlength="1" [(ngModel)]="readerOpts.quotechar" name="quotechar" />
+        </div>
+        <div class="field">
+          <span class="field-label">Header row</span>
+          <input class="input" type="number" min="0" [(ngModel)]="readerOpts.header_row" name="header_row" />
+        </div>
+        <div class="field checkbox-field">
+          <label>
+            <input type="checkbox" [(ngModel)]="readerOpts.skip_blank_lines" name="skip_blank_lines" />
+            Skip blank lines
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <span class="label">Rules</span>
+      <div class="reader-grid">
+        <div class="field">
+          <span class="field-label">On duplicate SKU</span>
+          <select class="select" [(ngModel)]="onDuplicateSku" name="on_duplicate_sku">
+            <option value="">(default: last_wins)</option>
+            <option value="last_wins">last_wins</option>
+            <option value="first_wins">first_wins</option>
+            <option value="reject_row">reject_row</option>
+          </select>
+        </div>
+        <div class="field">
+          <span class="field-label">On negative stock</span>
+          <select class="select" [(ngModel)]="onNegativeStock" name="on_negative_stock">
+            <option value="">(default: keep)</option>
+            <option value="keep">keep</option>
+            <option value="set_zero">set_zero</option>
+            <option value="reject_row">reject_row</option>
+          </select>
+        </div>
+        <div class="field checkbox-field">
+          <label>
+            <input type="checkbox" [(ngModel)]="onlyFirstColumnFilled" name="service_row_heuristic" />
+            Skip rows with only the first column filled
+          </label>
+        </div>
+        <div class="field">
+          <span class="field-label">Skip row if title matches (regex)</span>
+          <input class="input" type="text" [(ngModel)]="skipRowIfTitleMatches" name="skip_title" placeholder="e.g. ^ИТОГО" />
+        </div>
+      </div>
+    </div>
+
+    @if (missingRequiredFields().length) {
+      <span class="muted">Map a column for: {{ missingRequiredFields().join(', ') }}</span>
+    }
+
+    <div class="form-actions">
+      <button
+        class="btn btn-primary"
+        type="button"
+        [disabled]="saving() || !targetSupplierId() || !!missingRequiredFields().length"
+        (click)="save()"
+      >
+        {{ saving() ? 'Saving…' : 'Save mapping profile' }}
+      </button>
+    </div>
+  </div>
+
+  <div class="card table">
+    <div class="table-row table-head" style="grid-template-columns: 90px minmax(0,1fr) 160px;">
+      <span>Version</span><span>Supplier</span><span>Created</span>
+    </div>
+
+    @for (profile of savedProfiles(); track profile.id) {
+      <div class="table-row body" style="grid-template-columns: 90px minmax(0,1fr) 160px;">
+        <span>v{{ profile.version }}</span>
+        <span class="mono ellipsis muted">{{ profile.supplier_id }}</span>
+        <span class="muted">{{ profile.created_at | date: 'short' }}</span>
+      </div>
+    }
+
+    @if (!savedProfiles().length) {
+      <div class="empty-state">
+        <span class="empty-state__title">No mapping profiles saved yet this session</span>
+        <span class="muted">Fill in the form above and save one.</span>
+      </div>
+    }
+  </div>
+</div>

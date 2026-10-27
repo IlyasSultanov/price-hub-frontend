@@ -1,0 +1,23 @@
+:host {
+  display: block;
+  height: 100%;
+}
+
+.global-spinner {
+  position: fixed;
+  top: 14px;
+  right: 14px;
+  z-index: 1000;
+}
+
+.global-spinner__dot {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 2.5px solid var(--accent-soft);
+  border-top-color: var(--accent);
+}
+
+.global-spinner__dot {
+  animation: price-hub-spin 0.9s linear infinite;
+}

@@ -1,0 +1,264 @@
+@import 'https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap';
+
+:root {
+  --bg: #f4f3ef;
+  --surface: #fff;
+  --surface-2: #f8f7f3;
+  --text: #1b1d22;
+  --muted: #565d6b;
+  --border: #e2e0d8;
+  --accent: #2b55c9;
+  --accent-text: #fff;
+  --accent-soft: #e7edfb;
+  --pos: #1b7349;
+  --pos-soft: #e2f2e9;
+  --neg: #b3261e;
+  --neg-soft: #fbe8e6;
+  --warn: #9a6700;
+  --warn-soft: #fcefd0;
+
+  color-scheme: light;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  font-family: 'IBM Plex Sans', system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+}
+
+.btn {
+  height: 40px;
+  padding: 0 16px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  font: 500 14px/1 'IBM Plex Sans', system-ui, sans-serif;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+  transition: background-color 0.15s ease;
+}
+
+.btn:hover {
+  background: var(--surface-2);
+}
+
+.btn:disabled {
+  opacity: 0.7;
+  cursor: progress;
+}
+
+.btn-primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--accent-text);
+}
+
+.btn-primary:hover {
+  background: var(--accent);
+}
+
+.btn-primary:active {
+  filter: none;
+  background: var(--accent);
+  transform: translateY(1px);
+}
+
+.btn-danger {
+  color: var(--neg);
+  border-color: var(--neg-soft);
+}
+
+.btn-danger:hover {
+  background: var(--neg-soft);
+}
+
+.input,
+.select {
+  height: 40px;
+  padding: 0 12px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  font: 14px 'IBM Plex Sans', system-ui, sans-serif;
+}
+
+.input:focus,
+.select:focus {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+textarea.input {
+  height: auto;
+  padding: 10px 12px;
+  resize: vertical;
+}
+
+.label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+
+.muted {
+  color: var(--muted);
+}
+
+.mono {
+  font-family: 'IBM Plex Mono', ui-monospace, monospace;
+}
+
+.ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.nav-link {
+  height: 44px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--muted);
+  font: 500 15px 'IBM Plex Sans', system-ui, sans-serif;
+  cursor: pointer;
+  text-align: left;
+  text-decoration: none;
+}
+
+.nav-link:hover {
+  background: var(--surface-2);
+  color: var(--text);
+}
+
+.nav-link.on {
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  height: 22px;
+  padding: 0 8px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+  text-transform: capitalize;
+}
+
+.badge-acc {
+  color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.badge-pos {
+  color: var(--pos);
+  background: var(--pos-soft);
+}
+
+.badge-neg {
+  color: var(--neg);
+  background: var(--neg-soft);
+}
+
+.badge-warn {
+  color: var(--warn);
+  background: var(--warn-soft);
+}
+
+.table-row {
+  display: grid;
+  align-items: center;
+  column-gap: 16px;
+  padding: 0 24px;
+  min-height: 46px;
+  border-bottom: 1px solid var(--border);
+  font-size: 14px;
+}
+
+.table-row.body:hover {
+  background: var(--surface-2);
+}
+
+.table-head {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: var(--surface-2);
+  min-height: 40px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.empty-state {
+  padding: 48px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  text-align: center;
+}
+
+.empty-state__title {
+  font-weight: 600;
+}
+
+.page-body {
+  flex-grow: 1;
+  min-width: 0;
+  overflow: auto;
+  padding: 24px 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.spin {
+  animation: price-hub-spin 0.9s linear infinite;
+}
+
+@keyframes price-hub-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

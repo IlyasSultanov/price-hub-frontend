@@ -1,0 +1,19 @@
+# Compiled output
+/dist
+/out-tsc
+
+# Dependencies
+/node_modules
+/.pnpm-store
+
+# IDEs and editors
+/.idea
+.vscode/*
+!.vscode/extensions.json
+
+# Angular cache
+.angular
+
+# System files
+.DS_Store
+*.log

@@ -1,0 +1,76 @@
+<app-page-header title="Suppliers" subtitle="Onboard a supplier before uploading feeds or configuring mapping profiles for them">
+  <button class="btn btn-primary" type="button" (click)="toggleForm()">
+    {{ showForm() ? 'Cancel' : 'New supplier' }}
+  </button>
+</app-page-header>
+
+<div class="page-body">
+  @if (showForm()) {
+    <form class="card form" (ngSubmit)="createSupplier()">
+      <div class="form-grid">
+        <div class="field">
+          <span class="label">Name</span>
+          <input class="input" type="text" [(ngModel)]="form.name" name="name" required />
+        </div>
+        <div class="field">
+          <span class="label">Slug</span>
+          <input class="input" type="text" [(ngModel)]="form.slug" name="slug" required />
+        </div>
+        <div class="field">
+          <span class="label">Currency</span>
+          <input class="input" type="text" maxlength="3" [(ngModel)]="form.currency" name="currency" />
+        </div>
+        <div class="field">
+          <span class="label">Status</span>
+          <select class="select" [(ngModel)]="form.status" name="status">
+            @for (status of statuses; track status) {
+              <option [value]="status">{{ status }}</option>
+            }
+          </select>
+        </div>
+        <div class="field">
+          <span class="label">Quota (MB)</span>
+          <input class="input" type="number" min="0" [(ngModel)]="form.quota_mb" name="quota_mb" />
+        </div>
+        <div class="field">
+          <span class="label">Rating (0-5)</span>
+          <input class="input" type="number" min="0" max="5" step="0.1" [(ngModel)]="form.rating" name="rating" />
+        </div>
+      </div>
+      <div class="form-actions">
+        <button class="btn btn-primary" type="submit" [disabled]="creating()">Create supplier</button>
+      </div>
+    </form>
+  }
+
+  <div class="card table">
+    <div class="table-row table-head" style="grid-template-columns: minmax(0,1.2fr) minmax(0,1fr) 110px 90px 90px 110px;">
+      <span>Name</span><span>Slug</span><span>Status</span><span>Currency</span><span>Rating</span><span>Quota (MB)</span>
+    </div>
+
+    @for (supplier of suppliers(); track supplier.id) {
+      <div class="table-row body" style="grid-template-columns: minmax(0,1.2fr) minmax(0,1fr) 110px 90px 90px 110px;">
+        <span class="ellipsis">{{ supplier.name }}</span>
+        <span class="mono ellipsis muted">{{ supplier.slug }}</span>
+        <span>
+          <span
+            class="badge"
+            [class.badge-pos]="supplier.status === SupplierStatus.Active"
+            [class.badge-warn]="supplier.status === SupplierStatus.Paused"
+            [class.badge-neg]="supplier.status === SupplierStatus.Blocked"
+          >{{ supplier.status }}</span>
+        </span>
+        <span>{{ supplier.currency }}</span>
+        <span>{{ supplier.rating }}</span>
+        <span>{{ supplier.quota_mb }}</span>
+      </div>
+    }
+
+    @if (!loading() && !suppliers().length) {
+      <div class="empty-state">
+        <span class="empty-state__title">No suppliers yet</span>
+        <span class="muted">Create one above to get started.</span>
+      </div>
+    }
+  </div>
+</div>

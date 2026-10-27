@@ -1,0 +1,67 @@
+<app-page-header title="Feeds" subtitle="Upload a supplier's CSV price list and watch it parse">
+</app-page-header>
+
+<div class="page-body">
+  <form class="card form" (ngSubmit)="uploadFeed()">
+    <div class="form-grid">
+      <div class="field">
+        <span class="label">Supplier</span>
+        @if (canPickAnySupplier) {
+          <select class="select" [(ngModel)]="selectedSupplierId" name="supplier">
+            <option value="" disabled>Choose a supplier…</option>
+            @for (supplier of suppliers(); track supplier.id) {
+              <option [value]="supplier.id">{{ supplier.name }}</option>
+            }
+          </select>
+        } @else {
+          <input class="input mono" type="text" [value]="ownSupplierId ?? 'no supplier_id on your account'" disabled />
+        }
+      </div>
+      <div class="field">
+        <span class="label">CSV file</span>
+        <input class="input" type="file" accept=".csv,text/csv" (change)="onFileSelected($event)" />
+      </div>
+    </div>
+    <div class="form-actions">
+      <button
+        class="btn btn-primary"
+        type="submit"
+        [disabled]="uploading() || !selectedFile || !targetSupplierId()"
+      >
+        {{ uploading() ? 'Uploading…' : 'Upload feed' }}
+      </button>
+    </div>
+  </form>
+
+  <div class="card table">
+    <div class="table-row table-head" style="grid-template-columns: minmax(0,1.4fr) 150px 90px 90px 90px 160px;">
+      <span>File</span><span>Status</span><span>Total</span><span>OK</span><span>Failed</span><span>Uploaded</span>
+    </div>
+
+    @for (feed of feeds(); track feed.id) {
+      <div class="table-row body" style="grid-template-columns: minmax(0,1.4fr) 150px 90px 90px 90px 160px;">
+        <span class="mono ellipsis">{{ feed.original_filename ?? feed.id }}</span>
+        <span>
+          <span
+            class="badge"
+            [class.badge-pos]="feed.status === 'completed'"
+            [class.badge-warn]="feed.status === 'partially_completed'"
+            [class.badge-neg]="feed.status === 'failed' || feed.status === 'cancelled'"
+            [class.badge-acc]="!isTerminal(feed)"
+          >{{ feed.status }}</span>
+        </span>
+        <span>{{ feed.rows_total }}</span>
+        <span>{{ feed.rows_ok }}</span>
+        <span>{{ feed.rows_failed }}</span>
+        <span class="muted">{{ feed.created_at | date: 'short' }}</span>
+      </div>
+    }
+
+    @if (!feeds().length) {
+      <div class="empty-state">
+        <span class="empty-state__title">No feeds uploaded yet this session</span>
+        <span class="muted">Upload a CSV above to get started.</span>
+      </div>
+    }
+  </div>
+</div>
